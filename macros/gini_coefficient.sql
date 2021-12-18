@@ -21,12 +21,6 @@ with cum_values as (
 ),
 gini_curve as (
     select
-        null as {{ value_column }},
-        0 as prop_sum_{{ value_column }},
-        {{ min_value }} as prop_count_
-
-
-    select
         cum_values.{{ value_column }} as {{ value_column }},
         cum_values.cumsum_{{ value_column }}/nullif(cum_values.sum_{{ value_column }},0) as prop_sum_{{ value_column }},
         cum_values.cumcount_{{ value_column }}/nullif(cum_values.count_{{ value_column }},0) as prop_count_{{ value_column }},
@@ -38,9 +32,9 @@ gini_curve_lags as (
     select
         gini_curve.{{ value_column }},
         gini_curve.prop_sum_{{ value_column }},
-        lag(gini_curve.prop_sum_{{ value_column }},1) over (order by gini_curve.{{ value_column }} asc) as prop_sum_{{ value_column }}_lag,
+        coalesce(lag(gini_curve.prop_sum_{{ value_column }},1) over (order by gini_curve.{{ value_column }} asc),0) as prop_sum_{{ value_column }}_lag,
         gini_curve.prop_count_{{ value_column }},
-        lag(gini_curve.prop_count_{{ value_column }},1) over (order by gini_curve.{{ value_column }} asc) as prop_count_{{ value_column }}_lag
+        coalesce(lag(gini_curve.prop_count_{{ value_column }},1) over (order by gini_curve.{{ value_column }} asc),0) as prop_count_{{ value_column }}_lag
     from
         gini_curve
     order by gini_curve.{{ value_column }} asc
@@ -48,7 +42,7 @@ gini_curve_lags as (
 gini_curve_areas as (
     select
         gini_curve_lags.{{ value_column }},
-        1/2 * (gini_curve_lags.prop_sum_{{ value_column }} + gini_curve_lags.prop_sum_{{ value_column }}_lag)/nullif(gini_curve_lags.prop_count_{{ value_column }} - prop_count_{{ value_column }}_lag,0) as area
+        1/2 * (gini_curve_lags.prop_sum_{{ value_column }} + gini_curve_lags.prop_sum_{{ value_column }}_lag)/nullif(gini_curve.prop_count_{{ value_column }} - prop_count_{{ value_column }}_lag,0) as area
     from
         gini_curve_lags
     order by gini_curve_lags.{{ value_column }} asc
