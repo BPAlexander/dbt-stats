@@ -5,13 +5,11 @@ A package for dbt which enables statistical algorithms to be applied in your dat
 
 The macros are:
 
-
-_\* 2D charts taken from [scikit-learn.org](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html), GIFs are my own_
 ## Installation
 To use this in your dbt project, create or modify packages.yml to include:
 ```
 packages:
-  - package: "bpale/dbt_ml_preprocessing"
+  - package: "bpale/dbt-stats"
     version: [">=1.0.0"]
 ```
 _(replace the revision number with the latest)_
