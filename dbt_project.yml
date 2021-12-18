@@ -1,0 +1,14 @@
+name: 'dbt_stats'
+version: '0.1.0'
+
+require-dbt-version: ">=1.0.0"
+
+config-version: 1
+
+profile: "integration_tests"
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_modules"]
+macro-paths: ["macros"]
+log-path: "logs"

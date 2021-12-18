@@ -1,0 +1,35 @@
+
+name: 'dbt_stats_integration_tests'
+version: '0.1.0'
+
+profile: 'integration_tests'
+
+require-dbt-version: ">=1.0.0"
+
+config-version: 1
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+    - "dbt_modules"
+
+seeds:
+
+  +quote_columns: false
+
+  dbt_stats_integration_tests:
+      data_gini_coefficient:
+        +column_types:
+          col_to_scale_1: "{{ 'BIGNUMERIC' if 'project' in target else 'DECIMAL(38,10)' }}"
+          col_to_scale_2: "{{ 'BIGNUMERIC' if 'project' in target else 'DECIMAL(38,10)' }}"
+
+      data_standard_scaler_expected:
+        +column_types:
+          col_to_scale_1_scaled: "{{ 'BIGNUMERIC' if 'project' in target else 'DECIMAL(38,10)' }}"
+          col_to_scale_2_scaled: "{{ 'BIGNUMERIC' if 'project' in target else 'DECIMAL(38,10)' }}"

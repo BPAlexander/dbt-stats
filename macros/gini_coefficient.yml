@@ -1,0 +1,9 @@
+version: 1
+macros:
+  - name: gini_coefficient
+    description:
+      Calculate the gini_coefficient for continuous data, This represents the level of relative inequality 
+      in the values with 0 representing perfect equality (all values are the same) while 1 represents 
+      perfect inequality (one value has the maximum value while all of the remaining values have 0).
+      Commonly used to describe income inequality. Read more at [Gini Cofficient Wiki](https://en.wikipedia.org/wiki/Gini_coefficient)
+  
